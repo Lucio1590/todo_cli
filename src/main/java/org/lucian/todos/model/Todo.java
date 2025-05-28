@@ -54,6 +54,12 @@ public class Todo {
         this.priority = priority != null ? priority : Priority.MEDIUM;
     }
 
+    @Override
+    public String toString() {
+        return String.format("Todo{id=%d, title='%s', status=%s, priority=%s, dueDate=%s}", 
+                           id, title, status, priority, dueDate);
+    }
+
 
 
     //GET;SET;
