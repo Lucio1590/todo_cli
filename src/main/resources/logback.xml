@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Console appender for development -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- File appender for persistent logging -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/todo-management-system.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/todo-management-system.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>100MB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Root logger configuration -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </root>
+
+    <!-- Application specific logger -->
+    <logger name="org.lucio.tasks" level="INFO" additivity="false">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </logger>
+</configuration>
+
+<!-- 
+    This logback.xml file configures logging for a Java application using Logback, a popular logging framework. 
+    The configuration defines two main appenders: one for console output and another for writing logs to files.
+
+    The console appender (CONSOLE) is set up to print log messages to the terminal, which is especially useful during development. 
+    It uses a pattern layout to format each log entry with the date, thread, log level, logger name, and the actual message.
+
+    The file appender (FILE) is designed for persistent logging. 
+    It writes log messages to a file named logs/todo-management-system.log and uses a rolling policy that creates new log files based on both size (10MB) and date. 
+    The rolling policy also keeps up to 30 historical log files and ensures the total size of all log files does not exceed 100MB. 
+    This helps manage disk usage and keeps logs organized.
+
+    The root logger is set to the INFO level, meaning it will capture all log messages at INFO level and above (such as WARN and ERROR). 
+    Both the console and file appenders are attached to the root logger, so all log messages at this level or higher will be output to both destinations.
+
+    Additionally, there is a specific logger for the package org.lucio.tasks, also set at the INFO level. 
+    The additivity="false" attribute ensures that log messages from this package are only handled by the specified appenders 
+    and not passed up to the root logger, preventing duplicate log entries.
+-->
