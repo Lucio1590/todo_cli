@@ -96,7 +96,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.1</version>
                 <configuration>
-                    <mainClass>org.lucio.tasks.Main</mainClass>
+                    <mainClass>org.lucian.todos.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>
