@@ -375,7 +375,7 @@ public class AuthenticationService {
             // Hash provided password with extracted salt
             MessageDigest md = MessageDigest.getInstance(HASH_ALGORITHM);
             md.update(salt);
-            byte[] hashedPassword = md.digest(password.getBytes());
+            byte[] hashedPassword = md.digest(password.getBytes(StandardCharsets.UTF_8));
 
             // Compare hashes
             return MessageDigest.isEqual(storedPasswordHash, hashedPassword);
