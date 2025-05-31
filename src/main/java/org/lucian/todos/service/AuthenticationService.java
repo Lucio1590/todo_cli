@@ -303,7 +303,7 @@ public class AuthenticationService {
             // Hash password with salt
             MessageDigest md = MessageDigest.getInstance(HASH_ALGORITHM);
             md.update(salt);
-            byte[] hashedPassword = md.digest(password.getBytes());
+            byte[] hashedPassword = md.digest(password.getBytes(StandardCharsets.UTF_8));
             
             // Combine salt and hash
             byte[] saltAndHash = new byte[salt.length + hashedPassword.length];
