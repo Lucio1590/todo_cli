@@ -9,11 +9,12 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-/* 
-* Represents a project that contains multiple todos.
-* Implements the Composite pattern to group todos together.
-*/
-public class Project {
+/**
+ * Represents a project that contains multiple todos.
+ * Implements the Composite pattern to group todos together.
+ */
+public final class Project {
+    
     private Long id;
     private String name;
     private String description;
@@ -24,14 +25,14 @@ public class Project {
     private LocalDateTime updatedAt;
     
     /**
-    * Default constructor for Project.
-    */
+     * Default constructor for Project.
+     */
     public Project() {
         this.todos = new ArrayList<>();
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
-
+    
     /**
      * Constructor with name for Project.
      * 
@@ -42,9 +43,9 @@ public class Project {
         this();
         setName(name);
     }
-
+    
     /**
-     * Full Project constructor.
+     * Full constructor for Project.
      * 
      * @param name the project name
      * @param description the project description
@@ -57,8 +58,9 @@ public class Project {
         this.startDate = startDate;
         this.endDate = endDate;
     }
-
-    // get; set;
+    
+    // Getters and Setters
+    
     public Long getId() {
         return id;
     }
@@ -114,7 +116,41 @@ public class Project {
         return updatedAt;
     }
     
-
+    // Todo Management Methods (Composite Pattern)
+    
+    /**
+     * Adds a todo to this project.
+     * 
+     * @param todo the todo to add, must not be null
+     * @throws IllegalArgumentException if todo is null
+     */
+    public void addTodo(Todo todo) {
+        if (todo == null) {
+            throw new IllegalArgumentException("Todo cannot be null");
+        }
+        todos.add(todo);
+        todo.setProjectId(this.id);
+        this.updatedAt = LocalDateTime.now();
+    }
+    
+    /**
+     * Removes a todo from this project.
+     * 
+     * @param todo the todo to remove
+     * @return true if the todo was removed, false if not found
+     */
+    public boolean removeTodo(Todo todo) {
+        if (todo == null) {
+            return false;
+        }
+        boolean removed = todos.remove(todo);
+        if (removed) {
+            todo.setProjectId(null);
+            this.updatedAt = LocalDateTime.now();
+        }
+        return removed;
+    }
+    
     /**
      * Removes a todo by ID from this project.
      * 
