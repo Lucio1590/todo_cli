@@ -25,9 +25,19 @@ public class Main {
             // Launch the CLI interface
             TodoManagementCLI cli = new TodoManagementCLI();
             cli.start();
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid argument provided to Todo Management System", e);
+            System.err.println("Failed to start Todo Management System due to invalid input.");
+            System.err.println("Please check the logs for technical details.");
+            System.exit(1);
+        } catch (IOException e) {
+            logger.error("I/O error occurred while starting Todo Management System", e);
+            System.err.println("Failed to start Todo Management System due to an I/O error.");
+            System.err.println("Please check the logs for technical details.");
+            System.exit(1);
         } catch (Exception e) {
-            logger.error("Failed to start Todo Management System", e);
-            System.err.println("Failed to start Todo Management System.");
+            logger.error("Unexpected error occurred while starting Todo Management System", e);
+            System.err.println("An unexpected error occurred. Failed to start Todo Management System.");
             System.err.println("Please check the logs for technical details.");
             System.exit(1);
         } finally {
