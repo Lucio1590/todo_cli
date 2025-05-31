@@ -12,5 +12,12 @@ public class NotImplementedException extends RuntimeException {
         super(message != null && !message.isEmpty() ? message : "This feature is not implemented yet.");
         
     }
+
+    /**
+     * Constructs a new NotImplementedException with no detail message.
+     */
+    public NotImplementedException() {
+        super("This feature is not implemented yet.");
+    }
     
 }
