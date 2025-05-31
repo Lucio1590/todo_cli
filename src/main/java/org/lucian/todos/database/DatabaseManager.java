@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 public class DatabaseManager {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
 
-    private static final String DEFAULT_DATABASE_URL = "jdbc:sqlite:tasks.db";
+    private static final String DEFAULT_DATABASE_URL = "jdbc:sqlite:todos.db";
     private static final String TEST_DATABASE_URL = "jdbc:sqlite::memory:";
 
     private final String databaseUrl;
@@ -81,12 +81,12 @@ public class DatabaseManager {
      */
     private boolean checkIfMigrationNeeded(Connection connection) throws SQLException {
     try (Statement statement = connection.createStatement();
-         ResultSet resultSet = statement.executeQuery("PRAGMA table_info(tasks)")) {
-        boolean tasksExists = false;
+         ResultSet resultSet = statement.executeQuery("PRAGMA table_info(todos)")) {
+        boolean todosExists = false;
         boolean hasUserId = false;
 
         while (resultSet.next()) {
-            tasksExists = true;
+            todosExists = true;
             String columnName = resultSet.getString("name");
             if ("user_id".equals(columnName)) {
                 hasUserId = true;
@@ -94,8 +94,8 @@ public class DatabaseManager {
             }
         }
 
-        // If tasks table exists but doesn't have user_id, migration is needed
-        return tasksExists && !hasUserId;
+        // If todos table exists but doesn't have user_id, migration is needed
+        return todosExists && !hasUserId;
     } catch (SQLException e) {
         // If error checking table info, assume fresh install
         logger.debug("Error checking table structure, assuming fresh install: {}", e.getMessage());
@@ -199,22 +199,22 @@ public class DatabaseManager {
                         """);
             }
 
-            // Check if tasks table exists and migrate it
-            if (tableExists(connection, "tasks")) {
-                // Add user_id column to existing tasks table
+            // Check if todos table exists and migrate it
+            if (tableExists(connection, "todos")) {
+                // Add user_id column to existing todos table
                 try {
-                    statement.execute("ALTER TABLE tasks ADD COLUMN user_id INTEGER NOT NULL DEFAULT 1");
-                    logger.info("Added user_id column to tasks table");
+                    statement.execute("ALTER TABLE todos ADD COLUMN user_id INTEGER NOT NULL DEFAULT 1");
+                    logger.info("Added user_id column to todos table");
                 } catch (SQLException e) {
                     if (!e.getMessage().contains("duplicate column")) {
                         throw e;
                     }
-                    logger.debug("user_id column already exists in tasks table");
+                    logger.debug("user_id column already exists in todos table");
                 }
             } else {
-                // Create tasks table with user support
+                // Create todos table with user support
                 statement.execute("""
-                            CREATE TABLE tasks (
+                            CREATE TABLE todos (
                                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                                 title TEXT NOT NULL,
                                 description TEXT,
@@ -231,15 +231,15 @@ public class DatabaseManager {
                         """);
             }
 
-            // Create recurring_tasks table if it doesn't exist
+            // Create recurring_todos table if it doesn't exist
             statement.execute("""
-                        CREATE TABLE IF NOT EXISTS recurring_tasks (
-                            task_id INTEGER PRIMARY KEY,
+                        CREATE TABLE IF NOT EXISTS recurring_todos (
+                            todo_id INTEGER PRIMARY KEY,
                             recurring_interval_days INTEGER NOT NULL,
                             max_occurrences INTEGER NOT NULL DEFAULT 2147483647,
                             current_occurrence INTEGER NOT NULL DEFAULT 1,
                             next_due_date DATE,
-                            FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
+                            FOREIGN KEY (todo_id) REFERENCES todos(id) ON DELETE CASCADE
                         )
                     """);
 
@@ -291,9 +291,9 @@ public class DatabaseManager {
                         )
                     """);
 
-            // Create tasks table
+            // Create todos table
             statement.execute("""
-                        CREATE TABLE IF NOT EXISTS tasks (
+                        CREATE TABLE IF NOT EXISTS todos (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             title TEXT NOT NULL,
                             description TEXT,
@@ -309,15 +309,15 @@ public class DatabaseManager {
                         )
                     """);
 
-            // Create recurring_tasks table for additional recurring task data
+            // Create recurring_todos table for additional recurring todo data
             statement.execute("""
-                        CREATE TABLE IF NOT EXISTS recurring_tasks (
-                            task_id INTEGER PRIMARY KEY,
+                        CREATE TABLE IF NOT EXISTS recurring_todos (
+                            todo_id INTEGER PRIMARY KEY,
                             recurring_interval_days INTEGER NOT NULL,
                             max_occurrences INTEGER NOT NULL DEFAULT 2147483647,
                             current_occurrence INTEGER NOT NULL DEFAULT 1,
                             next_due_date DATE,
-                            FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
+                            FOREIGN KEY (todo_id) REFERENCES todos(id) ON DELETE CASCADE
                         )
                     """);
 
@@ -340,11 +340,11 @@ public class DatabaseManager {
         statement.execute("CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)");
         statement.execute("CREATE INDEX IF NOT EXISTS idx_users_active ON users(active)");
         statement.execute("CREATE INDEX IF NOT EXISTS idx_projects_user_id ON projects(user_id)");
-        statement.execute("CREATE INDEX IF NOT EXISTS idx_tasks_project_id ON tasks(project_id)");
-        statement.execute("CREATE INDEX IF NOT EXISTS idx_tasks_user_id ON tasks(user_id)");
-        statement.execute("CREATE INDEX IF NOT EXISTS idx_tasks_status ON tasks(status)");
-        statement.execute("CREATE INDEX IF NOT EXISTS idx_tasks_priority ON tasks(priority)");
-        statement.execute("CREATE INDEX IF NOT EXISTS idx_tasks_due_date ON tasks(due_date)");
+        statement.execute("CREATE INDEX IF NOT EXISTS idx_todos_project_id ON todos(project_id)");
+        statement.execute("CREATE INDEX IF NOT EXISTS idx_todos_user_id ON todos(user_id)");
+        statement.execute("CREATE INDEX IF NOT EXISTS idx_todos_status ON todos(status)");
+        statement.execute("CREATE INDEX IF NOT EXISTS idx_todos_priority ON todos(priority)");
+        statement.execute("CREATE INDEX IF NOT EXISTS idx_todos_due_date ON todos(due_date)");
     }
 
     /**
