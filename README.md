@@ -9,6 +9,25 @@ mvn clean install          # Full build
 mvn exec:java              # Run application
 ```
 
+### Credentials
+- **Username**: `admin`
+- **Password**: `admin`
+
+For testing purposes, the application uses a default admin user with the above credentials. You can change these in the database or through the application settings.
+### Features
+- **Todo Management**: Create, read, update, delete (CRUD) operations for todos.
+- **Project Management**: Create, read, update, delete (CRUD) operations for projects.
+- **CLI Interface**: Interactive command-line interface for user interaction.
+- **Data Persistence**: Uses SQLite for data storage.
+- **Error Handling**: Comprehensive error handling with custom exceptions.
+- **Logging**: Basic logging system for tracking application events.
+
+### Technologies Used
+- **Java SE**: Core programming language.
+- **SQLite**: Lightweight database for data persistence.
+- **JUnit**: Testing framework for unit tests.
+- **Maven**: Build automation tool for managing dependencies and building the project.
+
 
 ### Architecture Overview
 
