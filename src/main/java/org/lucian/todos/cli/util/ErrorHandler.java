@@ -66,7 +66,7 @@ public class ErrorHandler {
      */
     public static void handleStartupError(Exception e, String component) {
         logger.error("Failed to initialize {}", component, e);
-        System.err.println("Failed to start " + component + ": " + e.getMessage());
-        System.err.println("Please check your system configuration and try again.");
+        CLIUtils.printError("Failed to start " + component + ": " + e.getMessage());
+        CLIUtils.printError("Please check your system configuration and try again.");
     }
 }

@@ -133,11 +133,6 @@ class TodoManagementCLITest {
         }
     }
     
-    private String anyString() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'anyString'");
-    }
-
     @Test
     @DisplayName("Test display welcome with database exception")
     void testDisplayWelcomeWithDatabaseException() throws Exception {
