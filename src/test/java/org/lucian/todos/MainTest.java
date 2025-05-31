@@ -3,7 +3,6 @@ package org.lucian.todos;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -18,10 +17,8 @@ public class MainTest {
 
     private ByteArrayOutputStream outContent;
     private ByteArrayOutputStream errContent;
-    private final PrintStream originalOut = System.out;
-    private final PrintStream originalErr = System.err;
-
     @BeforeEach
+    @SuppressWarnings("unused")
     void setUp() {
         // Initialize new output streams
         outContent = new ByteArrayOutputStream();
@@ -32,12 +29,6 @@ public class MainTest {
         System.setErr(new PrintStream(errContent));
     }
     
-    @AfterEach
-    void restoreStreams() {
-        // Restore original stdout and stderr
-        System.setOut(originalOut);
-        System.setErr(originalErr);
-    }
 
     @Test
     @DisplayName("Test basic assertion - setup verification")
