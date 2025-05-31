@@ -44,8 +44,8 @@ public class ProjectDAOImpl implements ProjectDAO {
         logger.debug("Creating project: {}", project.getName());
         
         String sql = """
-            INSERT INTO projects (name, description, start_date, end_date, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO projects (name, description, start_date, end_date, user_id, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         """;
         
         try (Connection connection = databaseManager.getConnection();
@@ -57,8 +57,9 @@ public class ProjectDAOImpl implements ProjectDAO {
             statement.setString(2, project.getDescription());
             statement.setDate(3, project.getStartDate() != null ? Date.valueOf(project.getStartDate()) : null);
             statement.setDate(4, project.getEndDate() != null ? Date.valueOf(project.getEndDate()) : null);
-            statement.setTimestamp(5, Timestamp.valueOf(now));
+            statement.setLong(5, project.getUserId());
             statement.setTimestamp(6, Timestamp.valueOf(now));
+            statement.setTimestamp(7, Timestamp.valueOf(now));
             
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {

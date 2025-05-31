@@ -6,11 +6,13 @@ import java.util.Optional;
 
 import org.lucian.todos.dao.ProjectDAO;
 import org.lucian.todos.dao.TodoDAO;
+import org.lucian.todos.exceptions.AuthenticationException;
 import org.lucian.todos.exceptions.DatabaseException;
 import org.lucian.todos.exceptions.ProjectNotFoundException;
 import org.lucian.todos.model.Project;
 import org.lucian.todos.model.Todo;
 import org.lucian.todos.model.TodoStatus;
+import org.lucian.todos.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,10 +28,12 @@ public class ProjectService {
     
     private final ProjectDAO projectDAO;
     private final TodoDAO todoDAO;
+    private final AuthenticationService authService;
     
-    public ProjectService(ProjectDAO projectDAO, TodoDAO todoDAO) {
+    public ProjectService(ProjectDAO projectDAO, TodoDAO todoDAO, AuthenticationService authService) {
         this.projectDAO = projectDAO;
         this.todoDAO = todoDAO;
+        this.authService = authService;
     }
     
     /**
@@ -43,7 +47,19 @@ public class ProjectService {
     public Project createProject(Project project) throws DatabaseException {
         validateProject(project);
         
-        logger.info("Creating new project: {}", project.getName());
+        // Set the user_id to the current authenticated user
+        try {
+            User currentUser = authService.getCurrentUser();
+            if (currentUser == null) {
+                throw new AuthenticationException("No user is currently authenticated");
+            }
+            project.setUserId(currentUser.getId());
+        } catch (AuthenticationException e) {
+            logger.error("Failed to get current user for project creation", e);
+            throw new DatabaseException("Cannot create project: user not authenticated", e);
+        }
+        
+        logger.info("Creating new project: {} for user: {}", project.getName(), project.getUserId());
         
         return projectDAO.create(project);
     }

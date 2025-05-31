@@ -20,6 +20,7 @@ public final class Project {
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
+    private Long userId;
     private final List<Todo> todos;
     private final LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -105,6 +106,15 @@ public final class Project {
     
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+        this.updatedAt = LocalDateTime.now();
+    }
+    
+    public Long getUserId() {
+        return userId;
+    }
+    
+    public void setUserId(Long userId) {
+        this.userId = userId;
         this.updatedAt = LocalDateTime.now();
     }
     

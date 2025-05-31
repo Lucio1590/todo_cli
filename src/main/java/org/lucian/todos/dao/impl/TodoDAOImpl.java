@@ -434,7 +434,9 @@ public class TodoDAOImpl implements TodoDAO {
         todo.setPriority(Priority.valueOf(resultSet.getString("priority")));
         todo.setStatus(TodoStatus.valueOf(resultSet.getString("status")));
         
-        Long projectId = resultSet.getObject("project_id", Long.class);
+        // Handle NULL project_id safely
+        Object projectIdObj = resultSet.getObject("project_id");
+        Long projectId = (projectIdObj != null) ? ((Number) projectIdObj).longValue() : null;
         todo.setProjectId(projectId);
         
         return todo;

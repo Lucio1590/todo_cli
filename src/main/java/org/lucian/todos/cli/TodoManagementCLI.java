@@ -45,7 +45,7 @@ public class TodoManagementCLI {
             DAOFactory daoFactory = DAOFactory.getInstance();
             this.authService = new AuthenticationService(daoFactory.getUserDAO());
             this.todoService = new TodoService(daoFactory.getTodoDAO(), authService);
-            this.projectService = new ProjectService(daoFactory.getProjectDAO(), daoFactory.getTodoDAO());
+            this.projectService = new ProjectService(daoFactory.getProjectDAO(), daoFactory.getTodoDAO(), authService);
         } catch (Exception e) {
             logger.error("Failed to initialize database", e);
             throw new RuntimeException("Database initialization failed", e);
