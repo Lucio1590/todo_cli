@@ -1,35 +1,57 @@
 package org.lucian.todos;
-import org.lucian.todos.exceptions.NotImplementedException;
+
+import org.lucian.todos.cli.TodoManagementCLI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Main entry point for the Todo Management System.
+ * 
+ * This class now launches the full-featured CLI interface for the todo management system.
+ */
 public class Main {
+    
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
-
-
+    
+    /**
+     * Main method to start the Todo Management System.
+     * 
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
-        logger.info("Starting Todo Application...");
-
+        logger.info("Starting Todo Management System...");
+        
         try {
-            System.out.println("Welcome to the TODoo Management System!");
-            // TODO: implement the main application where the CLI is started
-            throw new NotImplementedException("This application is not implemented yet.");
-        } catch (NotImplementedException e) {
-            logger.error("Failed to start Todo Management System", e);
-            System.err.println("Failed to start Todo Management System.");
+            // Launch the CLI interface
+            TodoManagementCLI cli = new TodoManagementCLI();
+            cli.start();
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid argument provided to Todo Management System", e);
+            System.err.println("Failed to start Todo Management System due to invalid input.");
             System.err.println("Please check the logs for technical details.");
             System.exit(1);
-
-            logger.info("Task Management System shutdown complete.");
+        } catch (IOException e) {
+            logger.error("I/O error occurred while starting Todo Management System", e);
+            System.err.println("Failed to start Todo Management System due to an I/O error.");
+            System.err.println("Please check the logs for technical details.");
+            System.exit(1);
+        } catch (Exception e) {
+            logger.error("Unexpected error occurred while starting Todo Management System", e);
+            System.err.println("An unexpected error occurred. Failed to start Todo Management System.");
+            System.err.println("Please check the logs for technical details.");
+            System.exit(1);
+        } finally {
+            logger.info("Todo Management System shutdown complete.");
         }
     }
-
+    
     /**
-     * Returns the name of the application.
-     *
-     * @return Stting: the name of the application
+     * Simple utility method to get the application name.
+     * This method exists primarily for testing purposes.
+     * 
+     * @return the application name
      */
     public static String getApplicationName() {
-        return "Task Management System";
+        return "Todo Management System";
     }
 }
