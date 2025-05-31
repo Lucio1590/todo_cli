@@ -30,9 +30,9 @@ public class Main {
             System.err.println("Failed to start Todo Management System.");
             System.err.println("Please check the logs for technical details.");
             System.exit(1);
+        } finally {
+            logger.info("Todo Management System shutdown complete.");
         }
-        
-        logger.info("Todo Management System shutdown complete.");
     }
     
     /**
