@@ -88,9 +88,11 @@ public class ProjectService {
         Project foundProject = project.get();
         List<Todo> todos = todoDAO.findByProjectId(id);
         
-        // Clear existing todos and add loaded ones
-        foundProject.getTodos().clear();
-        todos.forEach(foundProject::addTodo);
+        // Set todos for the project without trying to clear the unmodifiable list
+        // Since getTodos() returns an unmodifiable list, we need to set todos directly
+        for (Todo todo : todos) {
+            foundProject.addTodo(todo);
+        }
         
         return foundProject;
     }
