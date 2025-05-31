@@ -2,6 +2,7 @@ package org.lucian.todos.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Todo {
     private Long id;
@@ -40,7 +41,7 @@ public class Todo {
     }
 
     /**
-     * Full constructor for Task.
+     * Full constructor for Todo.
      * 
      * @param title the todo title
      * @param description the todo description
@@ -145,4 +146,85 @@ public class Todo {
         return updatedAt;
     }
 
+
+    /**
+     * Marks the todo as completed.
+     */
+    public void markCompleted() {
+        setStatus(TodoStatus.COMPLETED);
+    }
+    
+    /**
+     * Marks the todo as in progress.
+     */
+    public void markInProgress() {
+        setStatus(TodoStatus.IN_PROGRESS);
+    }
+    
+    /**
+     * Marks the todo as cancelled.
+     */
+    public void markCancelled() {
+        setStatus(TodoStatus.CANCELLED);
+    }
+    
+    /**
+     * Checks if the todo is overdue.
+     * 
+     * @return true if the todo has a due date and it's in the past
+     */
+    public boolean isOverdue() {
+        return dueDate != null && 
+               LocalDate.now().isAfter(dueDate) && 
+               !status.isFinished();
+    }
+    
+    /**
+     * Checks if the todo is due today.
+     * 
+     * @return true if the todo is due today
+     */
+    public boolean isDueToday() {
+        return dueDate != null && dueDate.equals(LocalDate.now());
+    }
+    
+    /**
+     * Checks if the todo can be modified.
+     * 
+     * @return true if the todo status allows modification
+     */
+    public boolean isModifiable() {
+        return status.isModifiable();
+    }
+    
+    /**
+     * Validates the todo data.
+     * 
+     * @throws IllegalStateException if the todo is in an invalid state
+     */
+    public void validate() {
+        if (title == null || title.trim().isEmpty()) {
+            throw new IllegalStateException("Todo must have a title");
+        }
+        if (priority == null) {
+            throw new IllegalStateException("Todo must have a priority");
+        }
+        if (status == null) {
+            throw new IllegalStateException("Todo must have a status");
+        }
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Todo todo = (Todo) o;
+        return Objects.equals(id, todo.id) && 
+               Objects.equals(title, todo.title);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title);
+    }
 }
